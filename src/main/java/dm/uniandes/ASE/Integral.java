@@ -117,6 +117,11 @@ public class Integral {
 		return p;
 	}
 
+	/**
+	 * Método que realiza el calculo total de la Integración Numérica.
+	 * 
+	 * @return valor de la integral.
+	 */
 	public Double calculate(Double pX) {
 		Double p = 0d;
 		Double W = pX / this.num_seg;
@@ -155,6 +160,15 @@ public class Integral {
 		return result;
 	}
 
+	/**
+	 * Encuentra el valor del limite superior de una integral dado su resultado
+	 * 
+	 * @param dof
+	 *            - Grados de Libertad
+	 * @param parametroBuscadoP
+	 *            - valor de x en la función
+	 * @return valor calculado
+	 */
 	public Double findUpperLimit(Double parametroBuscadoP) {
 		Double error = 1/(Math.pow(10, 20));
 		Double definiteIntegral = 0d;
