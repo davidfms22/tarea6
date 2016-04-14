@@ -53,9 +53,9 @@ public class Main {
 		}, new FreeMarkerEngine());
 		
 		
-		String a1 = doIntegral(1.1, 9).toString();
-		String a2 = doIntegral(1.1812, 10).toString();
-		String a3 = doIntegral(2.750, 30).toString();
+		String a1 = getUpperLimit(0.20, 6).toString();
+		String a2 = getUpperLimit(0.45, 15).toString();
+		String a3 = getUpperLimit(0.495, 4).toString();
 		
 		post("/calcular", (request, response) -> {
 			Map<String, Object> attributes = new HashMap<>();
@@ -80,6 +80,20 @@ public class Main {
 	public static Double doIntegral (Double pX, Integer pDof){
 		Integral integral = new Integral(pX, pDof);
 		return integral.calculate();
+	}
+	
+	/**
+	 * Encuentra el valor de x para un valor p dado y un dof
+	 * 
+	 * @param pX:
+	 *            limite superior.
+	 * @param pDof:
+	 *            funcion a intengrar.
+	 * @return result: resultado de la integral.
+	 */
+	public static Double getUpperLimit (Double pP, Integer pDof){
+		Integral integral = new Integral(1.0, pDof);
+		return integral.findUpperLimit( pP);
 	}
 
 }

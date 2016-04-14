@@ -20,7 +20,9 @@ public class Integral {
 
 	private Integer dof;
 
-	private Integer num_seg = 20;
+	private Integer num_seg = 30;
+
+	private Double param = 0.5;
 
 	// Contructor
 	public Integral(Double upperLimit, Integer dof) {
@@ -95,10 +97,33 @@ public class Integral {
 	public Double calculate() {
 		Double p = 0d;
 		Double W = this.upperLimit / this.num_seg;
-		
+
 		Double numerator = Statistics.gammaFuntion((this.dof + 1) / 2.0);
 		Double denominator = (Math.pow((dof * Math.PI), 0.5D) * Statistics.gammaFuntion((this.dof) / 2.0));
-		Double term1 = numerator/denominator;
+		Double term1 = numerator / denominator;
+
+		for (int i = 0; i < this.num_seg + 1; i++) {
+			Integer multiplier = 1;
+
+			if (i != 0 && i != this.num_seg)
+				multiplier = i % 2 == 0 ? 2 : 4;
+			Double terms = calculateFunction(dof, i * W, term1);
+
+			terms = terms * (W / 3) * multiplier;
+			terms = Statistics.roundDown(terms, 5);
+			p += terms;
+		}
+		p = Statistics.roundDown(p, 5);
+		return p;
+	}
+
+	public Double calculate(Double pX) {
+		Double p = 0d;
+		Double W = pX / this.num_seg;
+
+		Double numerator = Statistics.gammaFuntion((this.dof + 1) / 2.0);
+		Double denominator = (Math.pow((dof * Math.PI), 0.5D) * Statistics.gammaFuntion((this.dof) / 2.0));
+		Double term1 = numerator / denominator;
 
 		for (int i = 0; i < this.num_seg + 1; i++) {
 			Integer multiplier = 1;
@@ -130,5 +155,51 @@ public class Integral {
 		return result;
 	}
 
+	public Double findUpperLimit(Double parametroBuscadoP) {
+		Double error = 1/(Math.pow(10, 20));
+		Double definiteIntegral = 0d;
+		Double initialIntegral = 0d;
+		Double diferencia = 0d;
+		Double parametroBuscadoX = 1.0;
+
+		initialIntegral = calculate(parametroBuscadoX);
+		diferencia = Math.abs(initialIntegral - parametroBuscadoP);
+
+		if (initialIntegral < parametroBuscadoP) {
+			parametroBuscadoX = parametroBuscadoX + param;
+		} else {
+			parametroBuscadoX = parametroBuscadoX - param;
+		}
+		while (diferencia > error) {
+			definiteIntegral = calculate(parametroBuscadoX);
+			diferencia = Math.abs(definiteIntegral - parametroBuscadoP);
+			if (definiteIntegral < parametroBuscadoP) {
+				param = adjust(param, definiteIntegral, parametroBuscadoP);
+				parametroBuscadoX = parametroBuscadoX + param;
+			} else {
+				param = adjust(param, definiteIntegral, parametroBuscadoP);
+				parametroBuscadoX = parametroBuscadoX - param;
+			}
+		}
+		return Statistics.roundDown(parametroBuscadoX, 5);
+	}
+
+	/**
+	 * Metodo que ajusta el valor de D
+	 * 
+	 * @param adjustDP
+	 *            valor de D
+	 * @param parametroIntegral
+	 *            valor de P en la integral
+	 * @param parametroBuscadoP
+	 *            valor de P que estamos buscando
+	 * @return adjustDP ajustado
+	 */
+	public Double adjust(Double adjustDP, Double parametroIntegral, Double parametroBuscadoP) {
+		if (parametroIntegral < parametroBuscadoP) {
+			return adjustDP;
+		}
+		return adjustDP / 2;
+	}
 
 }
