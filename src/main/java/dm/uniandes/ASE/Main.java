@@ -14,9 +14,10 @@ import spark.template.freemarker.FreeMarkerEngine;
 /***********************************************************************************/
 /*                                                                                 */
 /* Nombre:         David Francisco Martinez Salcedo                                */
-/* Fecha:          28/03/2016                                                      */
-/* Descripción:    Programa para integrar numericamente una funcion                */
-/*                 utilizando la regla de Simpson                                  */
+/* Fecha:          13/04/2016                                                      */
+/* Descripción:    Programa para encontrar el limete superior                      */
+/*                 de una inetgral hallada bajo el metodo numerico de la           */
+/*                 regla de Simpson                                                */
 /*                                                                                 */
 /***********************************************************************************/
 
